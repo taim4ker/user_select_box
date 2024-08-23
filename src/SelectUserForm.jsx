@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useSelectUserForm } from "./SelectUserForm.hook.js";
+import "./SelectUserForm.css";
 
 const SelectUserForm = () => {
   const [keyword, setKeyword] = useState("");
@@ -48,10 +49,10 @@ const SelectUserForm = () => {
         </select>
       )}
       {showSelectedUser && (
-        // @todo 見た目を整形する
-        <div>
-          <div>{selectedUser}</div>
+        <div className="tag-container">
+          <span className="tag-name">{selectedUser}</span>
           <button
+            className="close-button"
             onClick={() => {
               setKeyword("");
               setFilteredUsers([]);
