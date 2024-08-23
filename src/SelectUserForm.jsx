@@ -3,6 +3,7 @@ import { user_data } from "./user_data";
 
 const SelectUserForm = () => {
   const [keyword, setKeyword] = useState("");
+  const [showLists, setShowLists] = useState(false);
   const [filteredUsers, setFilteredUsers] = useState([]);
 
   const fetchUsers = () => {
@@ -17,6 +18,7 @@ const SelectUserForm = () => {
     );
 
     setFilteredUsers(filtered_data);
+    setShowLists(true);
   };
 
   useEffect(() => {
@@ -31,13 +33,15 @@ const SelectUserForm = () => {
         placeholder="ユーザーIDを入力"
         onChange={(e) => setKeyword(e.target.value)}
       />
-      <select size="5">
-        {filteredUsers.map((user, index) => (
-          <option key={index} value={user.id}>
-            {user.id} {user.name}
-          </option>
-        ))}
-      </select>
+      {showLists && (
+        <select size="5">
+          {filteredUsers.map((user, index) => (
+            <option key={index} value={user.id}>
+              {user.id} {user.name}
+            </option>
+          ))}
+        </select>
+      )}
     </>
   );
 };
