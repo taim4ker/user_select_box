@@ -1,9 +1,10 @@
 import "./styles.css";
+import SelectUserForm from "./SelectUserForm";
 
 export default function App() {
   return (
     <div className="App">
-      <div>React Default</div>
+      <SelectUserForm />
     </div>
   );
 }
