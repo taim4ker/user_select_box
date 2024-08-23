@@ -1,73 +1,66 @@
-import React from "react";
-import { useSelectUserForm } from "./SelectUserForm.hook.js";
-import "./SelectUserForm.css";
+import React, { useState, useEffect } from "react";
+import { user_data } from "./user_data";
 
 const SelectUserForm = () => {
-  const {
-    values: {
-      keyword,
-      setKeyword,
-      showInput,
-      showLists,
-      filteredUsers,
-      selectedUser,
-      showSelectedUser,
-      onClickInput,
-      onBlurSelectUser,
-      selectedUserId,
-      onClickCloseButton,
-    },
-  } = useSelectUserForm();
+  const [keyword, setKeyword] = useState("");
+  const [showLists, setShowLists] = useState(false);
+  const [filteredUsers, setFilteredUsers] = useState([]);
+  const [timer, setTimer] = useState(null);
+
+  const fetchUsers = () => {
+    if (keyword === "") {
+      return;
+    }
+
+    const filtered_data = user_data.filter((d) =>
+      d.id.toString().includes(keyword)
+    );
+
+    setFilteredUsers(filtered_data);
+    setShowLists(true);
+  };
+
+  useEffect(() => {
+    if (timer) {
+      clearTimeout(timer);
+    }
+
+    // 500ミリ秒まってから実行
+    const newTimer = setTimeout(() => {
+      fetchUsers();
+    }, 500);
+
+    setTimer(newTimer);
+
+    return () => clearTimeout(newTimer);
+  }, [keyword]);
 
   return (
     <>
-      {showInput && (
+      <div className="c-forms__content is-md">
         <input
           type="integer"
           value={keyword}
           className="forms__title"
           placeholder="ユーザーIDを入力"
-          onClick={() => {
-            onClickInput();
-          }}
           onChange={(e) => setKeyword(e.target.value)}
         />
-      )}
-      {showLists && (
-        <select
-          className="select-field"
-          size="5"
-          id="user_id"
-          name="reservation[user_id]"
-          onBlur={(e) => {
-            onBlurSelectUser(e);
-          }}
-        >
-          {filteredUsers.map((user, index) => (
-            <option
-              key={index}
-              value={user.id}
-              data-name={`${user.id},${user.name}`}
-            >
-              {user.id} {user.name}
-            </option>
-          ))}
-        </select>
-      )}
-      {showSelectedUser && (
-        <div className="tag-container">
-          <span className="tag-name">{selectedUser}</span>
-          <button
-            className="close-button"
-            onClick={() => {
-              onClickCloseButton();
-            }}
+        {showLists && (
+          // @todo 見た目を整形する
+          <select
+            className="select-field"
+            size="5"
+            id="user_id"
+            name="reservation[user_id]"
           >
-            ×
-          </button>
-        </div>
-      )}
-      <input type="hidden" name="reservation[user_id]" value={selectedUserId} />
+            {filteredUsers.map((user, index) => (
+              <option key={index} value={user.id}>
+                {user.id} {user.name}
+              </option>
+            ))}
+          </select>
+        )}
+      </div>
     </>
   );
 };
