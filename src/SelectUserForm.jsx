@@ -3,13 +3,17 @@ import { useSelectUserForm } from "./SelectUserForm.hook.js";
 import "./SelectUserForm.css";
 
 const SelectUserForm = () => {
-  const [keyword, setKeyword] = useState("");
-  const [showInput, setShowInput] = useState(true);
-  const [selectedUser, setSelectedUser] = useState(null);
-  const [showSelectedUser, setShowSelectedUser] = useState(false);
-
-  const { showLists, setShowLists, filteredUsers, setFilteredUsers
-  } = useSelectUserForm({ keyword });
+  const {
+    keyword,
+    setKeyword,
+    showInput,
+    showLists,
+    filteredUsers,
+    selectedUser,
+    showSelectedUser,
+    onBlurSelectUser,
+    onClickCloseButton,
+  } = useSelectUserForm();
 
   return (
     <>
@@ -25,15 +29,7 @@ const SelectUserForm = () => {
         <select
           size="5"
           onBlur={(e) => {
-            const userName =
-              e.target.options[e.target.selectedIndex].getAttribute(
-                "data-name"
-              );
-
-            setShowInput(false);
-            setShowLists(false);
-            setSelectedUser(userName);
-            setShowSelectedUser(true);
+            onBlurSelectUser(e);
           }}
         >
           {filteredUsers.map((user, index) => (
@@ -53,11 +49,7 @@ const SelectUserForm = () => {
           <button
             className="close-button"
             onClick={() => {
-              setKeyword("");
-              setFilteredUsers([]);
-              setShowInput(true);
-              setShowLists(false);
-              setShowSelectedUser(false);
+              onClickCloseButton();
             }}
           >
             ×
