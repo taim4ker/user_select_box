@@ -26,6 +26,8 @@ export function useSelectUserForm({ keyword }) {
 
   return {
     showLists,
+    setShowLists,
     filteredUsers,
-  },
+    setFilteredUsers
+  };
 }
